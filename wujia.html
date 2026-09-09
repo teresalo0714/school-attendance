@@ -149,7 +149,7 @@ function validateRoster(){
   return problems;
 }
 const KEY="schoolAttendanceRecords_v5";
-const CLOUD_API_URL="https://script.google.com/macros/s/AKfycbwQV7trYuZ7sZwE5SRgGAT77EqXAeU5QOCRLcQCg-Yvnnj3UNgeaa6vaf8tKZgIL_H8/exec";
+const CLOUD_API_URL="https://script.google.com/macros/s/AKfycbzlJJ3CC9VW0EmOnszeR6tcGzp3QGxNpbG4t_XXaLC1PRg8vb2abe7Zxr0K6_fhH_H9/exec";
 const ADMIN_PASSWORD="sdes6320902";
 let records=JSON.parse(localStorage.getItem(KEY)||"[]");
 let currentMarks={};
@@ -335,7 +335,6 @@ async function exportCSV(){
   a.download=`出缺席_${d||"全部"}.csv`;
   a.click();
 }
-function clearAllData(){if(confirm("確定要清除目前裝置上的全部歷史資料嗎？")){records=[];saveRecords();renderAdmin()}}
 async function init(){
   dateEl.value=today();
   leaveDateEl.value=today();
