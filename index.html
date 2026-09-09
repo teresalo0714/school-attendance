@@ -70,7 +70,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
 <body>
 <header class="header"><div class="header-inner">
 <h1>🏫 校園出缺席管理系統</h1><p>教師點名・請假紀錄・行政統計</p>
-<div id="lineUser" style="display:none"></div>
+<div id="lineUser" class="line-user" style="display:none"></div>
 <div style="margin-top:10px;font-size:13px">
 <a href="https://liff.line.me/2011500404-mIhsA2fA" style="color:inherit">📝 老師點名</a>　
 <a href="https://liff.line.me/2011500404-mIhsA2fA?mode=admin" style="color:inherit">📊 行政查詢</a>
@@ -144,7 +144,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
 
 <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-const LIFF_ID="2011500404-mlhsA2fA";
+const LIFF_ID="2011500404-mIhsA2fA";
 const R={"一甲": ["梅淨林", "陳翊", "黃恩泉", "蔡士宗", "徐浚愷", "洪祟祐", "張景文", "江昀芝", "王秝家", "周婉琦", "莊毓儒"], "二甲": ["高瑞翌", "鄭垚庠", "洪宥昇", "盧成風", "余守豐", "張晨恩", "方星棠", "許嘉恩", "許郁欣", "黃茹渝", "陳欣", "汪萭霏", "歐柔安", "徐柔安"], "三甲": ["張惟歆", "楊承宥", "徐浚晏", "蕭妤晅", "黃毓沁", "王婕庭", "洪苡恩", "劉以軍", "張芸菲", "張鉦坪"], "四甲": ["黃予安", "洪翊軒", "王俊堡", "盧廷州", "洪翌程", "張詠恩", "吳虹翾", "謝媃崴", "洪欣瑜", "吳宥瑩", "余昕庭", "黃姿穎"], "五甲": ["謝恩典", "謝侑廷", "張恆睿", "江柏佑", "陳永木", "余亭叡", "許瑋庭", "江旻瑾", "蕭妡紜", "張羽希", "吳芃蓁", "張蕎音", "林文彬", "陳明賢"], "六甲": ["黃琮益", "黃琮傑", "黃裕宬", "高芳慈", "劉貝倪", "沈柏逸", "鄭明源", "廖文皓", "陳芃崴", "洪立芹", "江旻珆", "余菀庭", "余芷嫻", "余昀芯"]};
 const EXPECTED_COUNTS={"一甲":11,"二甲":14,"三甲":10,"四甲":12,"五甲":14,"六甲":14};
 function validateRoster(){
@@ -191,12 +191,50 @@ function today(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth(
 function saveRecords(){localStorage.setItem(KEY,JSON.stringify(records))}
 function showTeacher(){teacherPanelEl.classList.remove("hidden");adminPanelEl.classList.add("hidden");teacherTabEl.classList.add("active");adminTabEl.classList.remove("active")}
 function openAdmin(){teacherPanelEl.classList.add("hidden");adminPanelEl.classList.remove("hidden");teacherTabEl.classList.remove("active");adminTabEl.classList.add("active");if(adminLoggedIn)renderAdmin()}
-function applyStartMode(){
+function getLiffRoute(){
+  const path=(window.location.pathname||"").replace(/\\/+$/,"").toLowerCase();
+  const parts=path.split("/").filter(Boolean);
+  const last=parts.length?parts[parts.length-1]:"";
+  if(last==="admin.html") return "admin";
+  if(last==="yijia.html") return "yijia";
+  if(last==="erjia.html") return "erjia";
+  if(last==="sanjia.html") return "sanjia";
+  if(last==="sijia.html") return "sijia";
+  if(last==="wujia.html") return "wujia";
+  if(last==="liujia.html") return "liujia";
+
   const params=new URLSearchParams(window.location.search);
   const hash=(window.location.hash||"").replace(/^#/,"").toLowerCase();
   const mode=(params.get("mode")||hash||"").toLowerCase();
-  if(mode==="admin") openAdmin();
-  else showTeacher();
+  return mode==="admin" ? "admin" : "";
+}
+
+function applyStartMode(){
+  const route=getLiffRoute();
+  const classMap={
+    yijia:"一甲", erjia:"二甲", sanjia:"三甲",
+    sijia:"四甲", wujia:"五甲", liujia:"六甲"
+  };
+
+  if(route==="admin"){
+    openAdmin();
+    return;
+  }
+
+  showTeacher();
+
+  if(classMap[route]){
+    classEl.value=classMap[route];
+    classEl.disabled=true;
+    classTitleEl.textContent=classMap[route]+"｜學生名單（"+(R[classMap[route]]||[]).length+"人）";
+    const n=document.getElementById("fixedClassName");
+    if(n)n.textContent=classMap[route];
+    document.getElementById("fixedClassNotice")?.classList.remove("hidden");
+    renderLeaveSelect();
+    loadCurrent();
+  }else{
+    classEl.disabled=false;
+  }
 }
 function loginAdmin(){if(adminPasswordEl.value===ADMIN_PASSWORD){adminLoggedIn=true;document.getElementById("adminLogin").classList.add("hidden");document.getElementById("adminContent").classList.remove("hidden");loginErrorEl.textContent="";renderAdmin()}else loginErrorEl.textContent="密碼錯誤，請重新輸入。"}
 function logoutAdmin(){adminLoggedIn=false;adminContentEl.classList.add("hidden");adminLoginEl.classList.remove("hidden");adminPasswordEl.value=""}
@@ -275,11 +313,11 @@ async function saveCurrent(){
   renderStudents();
 
   if(cloudCount===roster.length){
-    alert(c+" 點名完成！\n\n學生總數："+roster.length+" 人\n出席／請假資料："+cloudCount+" 筆\n\n✅ 已確認 Google Sheets 雲端資料完整。");
+    alert("儲存成功！");
   }else if(cloudCount!==null){
     alert(c+" 本機已儲存 "+newRecords.length+" 人，但雲端目前讀到 "+cloudCount+" 人。\n\n請不要重複按儲存，先檢查 Google Sheets。\n本次送出成功的網路請求："+ok+" / "+newRecords.length);
   }else if(ok===newRecords.length){
-    alert(c+" 已儲存 "+newRecords.length+" 人，雲端送出完成，但暫時無法回讀驗證。\n請稍後確認 Google Sheets。");
+    alert("儲存成功！");
   }else{
     alert(c+" 本機已儲存 "+newRecords.length+" 人，但雲端送出只有 "+ok+" / "+newRecords.length+" 筆。\n請檢查網路或 Apps Script。");
   }
@@ -351,16 +389,16 @@ async function init(){
     await liff.init({liffId:LIFF_ID});
     if(liff.isLoggedIn()){
       const profile=await liff.getProfile();
-      
+      document.getElementById("lineUser").textContent="";
     }else{
-      
+      document.getElementById("lineUser").textContent="";
     }
     // 重要：LIFF URL 的 ?mode=teacher / ?mode=admin 必須在 liff.init() 完成後讀取。
     // LINE 會先把額外參數暫存在 liff.state，init 完成後才會還原。
     applyStartMode();
   }catch(err){
     console.error("LIFF 初始化失敗",err);
-    
+    document.getElementById("lineUser").textContent="";
   }
 }
 init();
