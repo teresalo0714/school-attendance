@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6f84df">
+<title>校園出缺席管理</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6ff;color:#25324b;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}button{font:inherit;border:0;cursor:pointer}.header{background:#6f84df;color:#fff;padding:24px 18px 28px}.header h1{margin:0;font-size:30px}.wrap{max-width:900px;margin:-10px auto 40px;padding:0 14px}.card{background:#fff;border-radius:22px;padding:20px;box-shadow:0 8px 28px rgba(50,70,120,.12)}.entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.entry-btn{display:block;width:100%;padding:18px;border-radius:16px;background:#6f84df;color:#fff;font-size:20px;font-weight:900;text-align:center}.entry-admin{margin-top:12px;background:#53617d}@media(max-width:620px){.entry-grid{grid-template-columns:1fr}.header h1{font-size:27px}}
+</style>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body style="visibility:hidden">
+<header class="header"><h1>校園出缺席管理</h1></header>
+<main class="wrap">
+  <div class="card">
+    <div class="entry-grid">
+      <button class="entry-btn" data-path="yijia.html">一甲</button>
+      <button class="entry-btn" data-path="erjia.html">二甲</button>
+      <button class="entry-btn" data-path="sanjia.html">三甲</button>
+      <button class="entry-btn" data-path="sijia.html">四甲</button>
+      <button class="entry-btn" data-path="wujia.html">五甲</button>
+      <button class="entry-btn" data-path="liujia.html">六甲</button>
+    </div>
+    <button class="entry-btn entry-admin" data-path="admin.html">行政端</button>
+  </div>
+</main>
+<script>
+const LIFF_ID="2011500404-mIhsA2fA";
+const SITE="https://teresalo0714.github.io/school-attendance/";
+const VALID_PAGES=["yijia.html","erjia.html","sanjia.html","sijia.html","wujia.html","liujia.html","admin.html"];
+
+function cleanPath(value){
+  if(!value)return "";
+  let s=String(value).trim();
+  try{s=decodeURIComponent(s)}catch(e){}
+  s=s.replace(/^https?:\/\/[^/]+/i,"");
+  s=s.split("?")[0].split("#")[0];
+  return s;
+}
+function findPageFromUrl(){
+  const path=cleanPath(window.location.pathname).toLowerCase();
+  for(const page of VALID_PAGES){
+    if(path.endsWith("/"+page))return page;
+  }
+  const state=new URLSearchParams(window.location.search).get("liff.state");
+  const statePath=cleanPath(state).toLowerCase();
+  for(const page of VALID_PAGES){
+    if(statePath.endsWith("/"+page)||statePath===page)return page;
+  }
+  return "";
+}
+
+async function boot(){
+  // LINE 官方要求：先完成 liff.init()，再讀取或改變 URL。
+  try{await liff.init({liffId:LIFF_ID})}catch(error){console.error("LIFF init failed",error)}
+
+  const page=findPageFromUrl();
+  if(page){
+    const current=cleanPath(window.location.pathname).toLowerCase();
+    if(!current.endsWith("/"+page)){
+      window.location.replace(SITE+page);
+      return;
+    }
+  }
+
+  document.querySelectorAll("[data-path]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      window.location.href=SITE+button.dataset.path;
+    });
+  });
+  document.body.style.visibility="visible";
+}
+boot();
+</script>
+</body>
+</html>
