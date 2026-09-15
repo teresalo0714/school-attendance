@@ -1,1 +1,1009 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>校園出缺席管理</title><style>*{box-sizing:border-box}body{margin:0;background:#f3f6ff;color:#25324b;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}button,input,select{font:inherit}button{border:0;cursor:pointer}.header{background:#6f84df;color:#fff;padding:24px 18px 28px}.header h1{margin:0;font-size:30px}.wrap{max-width:900px;margin:-10px auto 40px;padding:0 14px}.card{background:#fff;border-radius:22px;padding:20px;box-shadow:0 8px 28px rgba(50,70,120,.12);margin-bottom:16px}.tabs{display:flex;gap:10px;margin-bottom:18px}.tab{flex:1}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-weight:800;margin-bottom:7px}input,select{width:100%;padding:12px;border:1px solid #dfe4f0;border-radius:12px;background:#fff;color:#25324b}.fixed{background:#f2f4fa!important;font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.btn{padding:12px 16px;border-radius:12px;font-weight:800}.green{background:#43b581;color:#fff}.blue{background:#6f84df;color:#fff}.orange{background:#f1a64b;color:#fff}.gray{background:#edf0f6;color:#53617d}.notice{margin-top:14px;background:#f3f5fd;border-radius:14px;padding:13px;color:#596783;line-height:1.55}.student-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.student{border:1px solid #e1e6f0;border-radius:14px;padding:12px}.student.present{background:#f0fbf5;border-color:#a8ddc2}.student.leave{background:#fff8ed;border-color:#f0ca8a}.student-name{font-weight:900;font-size:17px}.status{margin-top:5px;color:#69758d;font-size:13px;min-height:20px}.student-actions{display:flex;gap:7px;margin-top:9px}.student-actions button{flex:1;padding:8px;border-radius:9px;font-weight:800}.hidden{display:none!important}.modal{position:fixed;inset:0;background:rgba(20,28,48,.45);display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}.modalbox{background:#fff;border-radius:18px;padding:20px;width:min(460px,100%)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.stat{background:#f6f8fc;border:1px solid #e2e6ef;border-radius:14px;padding:14px}.stat b{display:block;font-size:25px;margin-top:5px}.tablewrap{overflow:auto;margin-top:10px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:9px 7px;border-bottom:1px solid #e4e8f0;text-align:left;white-space:nowrap}th{background:#f5f7fb}.empty{padding:20px;text-align:center;color:#77829a}.entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.entry-btn{display:block;width:100%;padding:18px;border-radius:16px;background:#6f84df;color:#fff;font-size:20px;font-weight:900;text-align:center;text-decoration:none}.entry-admin{background:#53617d;margin-top:12px}@media(max-width:620px){.grid,.entry-grid{grid-template-columns:1fr}.student-list{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr 1fr}.header h1{font-size:27px}}</style></head><body><header class="header"><h1>校園出缺席管理</h1></header><main class="wrap"><div class="card"><div class="entry-grid"><a class="entry-btn" href="yijia.html">一甲</a><a class="entry-btn" href="erjia.html">二甲</a><a class="entry-btn" href="sanjia.html">三甲</a><a class="entry-btn" href="sijia.html">四甲</a><a class="entry-btn" href="wujia.html">五甲</a><a class="entry-btn" href="liujia.html">六甲</a></div><a class="entry-btn entry-admin" href="admin.html">行政端</a></div></main></body></html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>校園出缺席管理系統</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;
+  background:#f3f7fb;
+  color:#243447;
+}
+
+button,select,textarea{
+  font:inherit;
+}
+
+.app{
+  max-width:850px;
+  margin:auto;
+  padding:16px;
+}
+
+.header{
+  background:white;
+  border-radius:22px;
+  padding:18px 20px;
+  margin-bottom:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.title{
+  font-size:24px;
+  font-weight:800;
+}
+
+.date{
+  color:#718096;
+  font-size:13px;
+  margin-top:5px;
+}
+
+.card{
+  background:white;
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 4px 16px rgba(0,0,0,.05);
+}
+
+.class-title{
+  font-size:22px;
+  font-weight:800;
+  margin-bottom:15px;
+}
+
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:15px;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:11px 15px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.green{
+  background:#16a34a;
+  color:white;
+}
+
+.blue{
+  background:#3b82f6;
+  color:white;
+}
+
+.gray{
+  background:#e9eef5;
+  color:#243447;
+}
+
+.student{
+  background:#fff;
+  border:1px solid #edf1f5;
+  border-radius:17px;
+  padding:13px;
+  margin-bottom:10px;
+}
+
+.student-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.number{
+  width:32px;
+  font-weight:800;
+  color:#718096;
+}
+
+.name{
+  flex:1;
+  font-size:17px;
+  font-weight:700;
+}
+
+.status{
+  font-size:12px;
+  padding:5px 8px;
+  border-radius:9px;
+  background:#e8f5e9;
+  color:#198754;
+}
+
+.status.absent{
+  background:#fff0f0;
+  color:#d63031;
+}
+
+.details{
+  display:none;
+  margin-top:12px;
+  margin-left:42px;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.details.show{
+  display:grid;
+}
+
+select,textarea{
+  width:100%;
+  border:1px solid #d8e0ea;
+  border-radius:10px;
+  padding:10px;
+  background:white;
+}
+
+textarea{
+  grid-column:1/-1;
+  min-height:60px;
+  resize:vertical;
+}
+
+.message{
+  text-align:center;
+  padding:25px 10px;
+  color:#718096;
+}
+
+.error{
+  background:#fff0f0;
+  color:#c0392b;
+  padding:15px;
+  border-radius:12px;
+  line-height:1.7;
+}
+
+.save-status{
+  margin-top:12px;
+  text-align:center;
+  font-size:14px;
+  color:#718096;
+}
+
+@media(max-width:600px){
+
+  .app{
+    padding:10px;
+  }
+
+  .title{
+    font-size:21px;
+  }
+
+  .class-title{
+    font-size:20px;
+  }
+
+  .name{
+    font-size:16px;
+  }
+
+  .details.show{
+    grid-template-columns:1fr;
+  }
+
+  .details{
+    margin-left:0;
+  }
+
+  .toolbar .btn{
+    flex:1;
+  }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+
+    <div class="title">
+      🏫 校園出缺席管理
+    </div>
+
+    <div class="date" id="today"></div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="class-title" id="classTitle">
+      載入中...
+    </div>
+
+
+    <div class="toolbar">
+
+      <button class="btn green"
+              onclick="checkAll()">
+        ✓ 一鍵全班簽到
+      </button>
+
+      <button class="btn blue"
+              id="saveButton"
+              onclick="saveAttendance()">
+        💾 儲存今日出缺席
+      </button>
+
+      <button class="btn gray"
+              onclick="loadStudents()">
+        ↻ 重新整理
+      </button>
+
+    </div>
+
+
+    <div id="students">
+      <div class="message">
+        正在讀取學生名單...
+      </div>
+    </div>
+
+
+    <div id="saveStatus"
+         class="save-status">
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   Apps Script API
+========================================== */
+
+const API_URL =
+'https://script.google.com/macros/s/AKfycbyn4EvzGapAd2XyPIVhVgi8q4E-y38qlb0YrkcyALWbVanOgHKTW_h70Ws9DG7BIbQ/exec';
+
+
+const CLASSES = [
+  '一甲',
+  '二甲',
+  '三甲',
+  '四甲',
+  '五甲',
+  '六甲'
+];
+
+
+let currentClass = '';
+
+let studentData = [];
+
+
+/* ==========================================
+   日期
+========================================== */
+
+document.getElementById('today').textContent =
+  new Date().toLocaleDateString(
+    'zh-TW',
+    {
+      year:'numeric',
+      month:'long',
+      day:'numeric'
+    }
+  );
+
+
+/* ==========================================
+   取得網址裡面的班級
+========================================== */
+
+function getClassFromURL(){
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  let className =
+    params.get('class') || '';
+
+  className =
+    className.trim();
+
+  if(
+    CLASSES.includes(className)
+  ){
+    return className;
+  }
+
+  return '';
+}
+
+
+/* ==========================================
+   初始化
+========================================== */
+
+function init(){
+
+  currentClass =
+    getClassFromURL();
+
+
+  if(!currentClass){
+
+    document.getElementById(
+      'classTitle'
+    ).textContent =
+      '找不到班級';
+
+
+    document.getElementById(
+      'students'
+    ).innerHTML = `
+
+      <div class="error">
+
+        ⚠️ 這個網址沒有指定班級。
+
+        <br><br>
+
+        請從 LINE 官方帳號的
+        「一甲～六甲」按鈕進入。
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  document.getElementById(
+    'classTitle'
+  ).textContent =
+    currentClass + '｜今日點名';
+
+
+  loadStudents();
+}
+
+
+init();
+
+
+/* ==========================================
+   JSONP API
+========================================== */
+
+function api(action,params={}){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const callbackName =
+        'callback_' +
+        Date.now() +
+        '_' +
+        Math.floor(
+          Math.random()*100000
+        );
+
+
+      const script =
+        document.createElement(
+          'script'
+        );
+
+
+      const query =
+        new URLSearchParams();
+
+
+      query.set(
+        'action',
+        action
+      );
+
+
+      query.set(
+        'callback',
+        callbackName
+      );
+
+
+      Object.keys(params)
+        .forEach(key=>{
+
+          if(
+            params[key] !== undefined &&
+            params[key] !== null
+          ){
+
+            query.set(
+              key,
+              String(params[key])
+            );
+
+          }
+
+        });
+
+
+      let finished = false;
+
+
+      function cleanup(){
+
+        if(finished){
+          return;
+        }
+
+        finished = true;
+
+        clearTimeout(timer);
+
+        if(script.parentNode){
+          script.parentNode.removeChild(
+            script
+          );
+        }
+
+        try{
+          delete window[callbackName];
+        }catch(e){
+          window[callbackName] = undefined;
+        }
+      }
+
+
+      window[callbackName] =
+        function(data){
+
+          if(finished){
+            return;
+          }
+
+          cleanup();
+
+
+          if(
+            data &&
+            data.ok === false
+          ){
+
+            reject(
+              new Error(
+                data.error ||
+                'API 發生錯誤'
+              )
+            );
+
+            return;
+          }
+
+
+          resolve(data);
+        };
+
+
+      script.onerror =
+        function(){
+
+          if(finished){
+            return;
+          }
+
+          cleanup();
+
+          reject(
+            new Error(
+              '無法連線 Apps Script'
+            )
+          );
+        };
+
+
+      const timer =
+        setTimeout(
+          ()=>{
+
+            if(finished){
+              return;
+            }
+
+            cleanup();
+
+            reject(
+              new Error(
+                '連線逾時'
+              )
+            );
+
+          },
+          20000
+        );
+
+
+      script.src =
+        API_URL +
+        '?' +
+        query.toString();
+
+
+      document.body.appendChild(
+        script
+      );
+
+    }
+  );
+}
+
+
+/* ==========================================
+   取得學生名單
+========================================== */
+
+async function loadStudents(){
+
+  if(!currentClass){
+    return;
+  }
+
+
+  const box =
+    document.getElementById(
+      'students'
+    );
+
+
+  box.innerHTML = `
+    <div class="message">
+      正在讀取 ${escapeHTML(currentClass)}
+      學生名單...
+    </div>
+  `;
+
+
+  try{
+
+    studentData =
+      await api(
+        'getStudents',
+        {
+          className:
+            currentClass
+        }
+      );
+
+
+    renderStudents();
+
+
+  }catch(error){
+
+    box.innerHTML = `
+
+      <div class="error">
+
+        ❌ 無法取得學生名單
+
+        <br><br>
+
+        ${escapeHTML(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* ==========================================
+   顯示學生
+========================================== */
+
+function renderStudents(){
+
+  const box =
+    document.getElementById(
+      'students'
+    );
+
+
+  if(
+    !Array.isArray(studentData) ||
+    studentData.length === 0
+  ){
+
+    box.innerHTML = `
+
+      <div class="message">
+        ${escapeHTML(currentClass)}
+        目前沒有學生資料。
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  box.innerHTML = '';
+
+
+  studentData.forEach(
+    (student,index)=>{
+
+      const div =
+        document.createElement(
+          'div'
+        );
+
+
+      div.className =
+        'student';
+
+
+      div.innerHTML = `
+
+        <div class="student-row">
+
+          <div class="number">
+            ${escapeHTML(student.number)}
+          </div>
+
+
+          <div class="name">
+            ${escapeHTML(student.name)}
+          </div>
+
+
+          <div
+            class="status"
+            id="status-${index}"
+          >
+            出席
+          </div>
+
+
+          <button
+            class="btn gray"
+            onclick="toggleDetails(${index})"
+          >
+            假別／備註
+          </button>
+
+        </div>
+
+
+        <div
+          class="details"
+          id="details-${index}"
+        >
+
+          <select
+            id="leave-${index}"
+            onchange="leaveChanged(${index})"
+          >
+
+            <option value="">
+              出席
+            </option>
+
+            <option value="事假">
+              事假
+            </option>
+
+            <option value="病假">
+              病假
+            </option>
+
+            <option value="喪假">
+              喪假
+            </option>
+
+          </select>
+
+
+          <button
+            class="btn gray"
+            onclick="setPresent(${index})"
+          >
+            恢復出席
+          </button>
+
+
+          <textarea
+            id="note-${index}"
+            placeholder="備註（可留白）"
+          ></textarea>
+
+        </div>
+
+      `;
+
+
+      box.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+/* ==========================================
+   展開假別
+========================================== */
+
+function toggleDetails(index){
+
+  document
+    .getElementById(
+      'details-' + index
+    )
+    .classList
+    .toggle('show');
+}
+
+
+/* ==========================================
+   假別改變
+========================================== */
+
+function leaveChanged(index){
+
+  const leave =
+    document.getElementById(
+      'leave-' + index
+    ).value;
+
+
+  const status =
+    document.getElementById(
+      'status-' + index
+    );
+
+
+  if(leave){
+
+    status.textContent =
+      '缺席';
+
+    status.className =
+      'status absent';
+
+  }else{
+
+    setPresent(index);
+  }
+}
+
+
+/* ==========================================
+   恢復出席
+========================================== */
+
+function setPresent(index){
+
+  document.getElementById(
+    'leave-' + index
+  ).value = '';
+
+
+  const status =
+    document.getElementById(
+      'status-' + index
+    );
+
+
+  status.textContent =
+    '出席';
+
+  status.className =
+    'status';
+}
+
+
+/* ==========================================
+   一鍵全班簽到
+========================================== */
+
+function checkAll(){
+
+  studentData.forEach(
+    (student,index)=>{
+      setPresent(index);
+    }
+  );
+
+
+  document.getElementById(
+    'saveStatus'
+  ).textContent =
+    '✓ 已將全班設定為出席，記得按「儲存今日出缺席」。';
+}
+
+
+/* ==========================================
+   儲存點名
+========================================== */
+
+async function saveAttendance(){
+
+  if(
+    !studentData.length
+  ){
+
+    alert(
+      '目前沒有學生資料。'
+    );
+
+    return;
+  }
+
+
+  const button =
+    document.getElementById(
+      'saveButton'
+    );
+
+
+  const statusBox =
+    document.getElementById(
+      'saveStatus'
+    );
+
+
+  const records =
+    studentData.map(
+      (student,index)=>{
+
+        const leave =
+          document.getElementById(
+            'leave-' + index
+          ).value;
+
+
+        const note =
+          document.getElementById(
+            'note-' + index
+          ).value.trim();
+
+
+        return {
+
+          number:
+            student.number,
+
+          name:
+            student.name,
+
+          status:
+            leave
+              ? '缺席'
+              : '出席',
+
+          leaveType:
+            leave,
+
+          note:
+            note
+
+        };
+
+      }
+    );
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    '儲存中...';
+
+  statusBox.textContent =
+    '正在儲存點名資料...';
+
+
+  try{
+
+    const result =
+      await api(
+        'saveAttendance',
+        {
+
+          className:
+            currentClass,
+
+          records:
+            JSON.stringify(
+              records
+            )
+
+        }
+      );
+
+
+    statusBox.textContent =
+      `✅ ${result.className} 點名完成，共 ${result.count} 人。`;
+
+
+    alert(
+      `${result.className} 今日點名完成！`
+    );
+
+
+  }catch(error){
+
+    statusBox.textContent =
+      '❌ 儲存失敗';
+
+
+    alert(
+      '儲存失敗：' +
+      error.message
+    );
+
+  }finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      '💾 儲存今日出缺席';
+
+  }
+
+}
+
+
+/* ==========================================
+   防止 HTML 注入
+========================================== */
+
+function escapeHTML(value){
+
+  return String(
+    value ?? ''
+  ).replace(
+    /[&<>"']/g,
+    char => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[char])
+  );
+}
+
+</script>
+
+</body>
+</html>
