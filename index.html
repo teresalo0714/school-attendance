@@ -27,12 +27,13 @@ body{
 
 button,
 select,
-textarea{
+textarea,
+input{
   font:inherit;
 }
 
 .app{
-  max-width:850px;
+  max-width:900px;
   margin:auto;
   padding:16px;
 }
@@ -56,10 +57,17 @@ textarea{
   margin-top:5px;
 }
 
+.liff-status{
+  font-size:12px;
+  color:#94a3b8;
+  margin-top:5px;
+}
+
 .card{
   background:white;
   border-radius:20px;
   padding:16px;
+  margin-bottom:15px;
   box-shadow:0 4px 16px rgba(0,0,0,.05);
 }
 
@@ -102,6 +110,16 @@ textarea{
 .gray{
   background:#e9eef5;
   color:#243447;
+}
+
+.red{
+  background:#ef4444;
+  color:white;
+}
+
+.purple{
+  background:#7c3aed;
+  color:white;
 }
 
 .student{
@@ -157,7 +175,8 @@ textarea{
 }
 
 select,
-textarea{
+textarea,
+input{
   width:100%;
   border:1px solid #d8e0ea;
   border-radius:10px;
@@ -194,13 +213,273 @@ textarea{
   line-height:1.6;
 }
 
-.liff-status{
-  font-size:12px;
-  color:#94a3b8;
-  margin-top:5px;
+
+/* =========================
+   行政端入口
+========================= */
+
+.admin-entry{
+  margin-top:24px;
+  padding-top:18px;
+  border-top:1px solid #e8edf3;
+  text-align:center;
 }
 
-@media(max-width:600px){
+.admin-entry button{
+  width:100%;
+  max-width:400px;
+}
+
+
+/* =========================
+   登入畫面
+========================= */
+
+.login-box{
+  max-width:430px;
+  margin:20px auto;
+}
+
+.login-icon{
+  font-size:50px;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.login-title{
+  font-size:24px;
+  font-weight:800;
+  text-align:center;
+  margin-bottom:8px;
+}
+
+.login-text{
+  color:#718096;
+  text-align:center;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.password-box{
+  margin-bottom:10px;
+}
+
+.login-error{
+  color:#dc2626;
+  font-size:14px;
+  text-align:center;
+  margin-top:12px;
+}
+
+
+/* =========================
+   行政端
+========================= */
+
+.admin-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.admin-title{
+  font-size:24px;
+  font-weight:800;
+}
+
+.section-title{
+  font-size:19px;
+  font-weight:800;
+  margin-bottom:13px;
+}
+
+.section-subtitle{
+  color:#718096;
+  font-size:13px;
+  margin-top:-7px;
+  margin-bottom:15px;
+}
+
+
+/* =========================
+   六班點名狀況
+========================= */
+
+.class-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.class-status-card{
+  border:1px solid #e7edf3;
+  border-radius:16px;
+  padding:14px;
+  background:#fafcff;
+}
+
+.class-status-card.completed{
+  background:#f0fdf4;
+  border-color:#bbf7d0;
+}
+
+.class-status-card.incomplete{
+  background:#fff7ed;
+  border-color:#fed7aa;
+}
+
+.class-status-name{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:7px;
+}
+
+.class-status-label{
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.completed-text{
+  color:#15803d;
+}
+
+.incomplete-text{
+  color:#c2410c;
+}
+
+.class-numbers{
+  font-size:13px;
+  line-height:1.7;
+  color:#475569;
+}
+
+
+/* =========================
+   全校統計
+========================= */
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.stat-card{
+  padding:15px 8px;
+  border-radius:15px;
+  background:#f8fafc;
+  text-align:center;
+  border:1px solid #edf1f5;
+}
+
+.stat-number{
+  font-size:26px;
+  font-weight:900;
+}
+
+.stat-label{
+  font-size:13px;
+  color:#718096;
+  margin-top:4px;
+}
+
+
+/* =========================
+   今日請假名單
+========================= */
+
+.absence-list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.absence-item{
+  border:1px solid #e7edf3;
+  border-radius:15px;
+  padding:13px;
+  display:grid;
+  grid-template-columns:70px 55px 1fr 75px 1.5fr;
+  gap:8px;
+  align-items:center;
+}
+
+.absence-class{
+  font-weight:800;
+}
+
+.absence-seat{
+  color:#64748b;
+  font-size:14px;
+}
+
+.absence-name{
+  font-weight:800;
+}
+
+.leave-badge{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:800;
+  text-align:center;
+}
+
+.leave-sick{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+.leave-personal{
+  background:#ffedd5;
+  color:#c2410c;
+}
+
+.leave-bereavement{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.leave-other{
+  background:#e2e8f0;
+  color:#475569;
+}
+
+.absence-note{
+  color:#475569;
+  font-size:14px;
+}
+
+.no-absence{
+  background:#f0fdf4;
+  color:#15803d;
+  padding:20px;
+  border-radius:14px;
+  text-align:center;
+  font-weight:700;
+}
+
+
+/* =========================
+   載入
+========================= */
+
+.loading{
+  text-align:center;
+  padding:35px 10px;
+  color:#718096;
+}
+
+
+/* =========================
+   手機版
+========================= */
+
+@media(max-width:700px){
 
   .app{
     padding:10px;
@@ -230,6 +509,34 @@ textarea{
     flex:1;
   }
 
+  .class-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stats-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .absence-item{
+    grid-template-columns:55px 45px 1fr 65px;
+  }
+
+  .absence-note{
+    grid-column:1/-1;
+    background:#f8fafc;
+    padding:8px;
+    border-radius:8px;
+  }
+
+  .admin-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .admin-header .btn{
+    width:100%;
+  }
+
 }
 
 </style>
@@ -255,59 +562,170 @@ textarea{
   </div>
 
 
-  <div class="card">
+  <!-- 班級點名頁 -->
+  <div id="attendancePage">
 
-    <div class="class-title" id="classTitle">
-      正在讀取班級...
-    </div>
+    <div class="card">
 
-
-    <div class="toolbar">
-
-      <button
-        class="btn green"
-        id="checkAllButton"
-        onclick="checkAll()"
-        disabled
-      >
-        ✓ 一鍵全班簽到
-      </button>
+      <div class="class-title" id="classTitle">
+        正在讀取班級...
+      </div>
 
 
-      <button
-        class="btn blue"
-        id="saveButton"
-        onclick="saveAttendance()"
-        disabled
-      >
-        💾 儲存今日出缺席
-      </button>
+      <div class="toolbar">
+
+        <button
+          class="btn green"
+          id="checkAllButton"
+          onclick="checkAll()"
+          disabled>
+          ✓ 一鍵全班簽到
+        </button>
+
+        <button
+          class="btn blue"
+          id="saveButton"
+          onclick="saveAttendance()"
+          disabled>
+          💾 儲存今日出缺席
+        </button>
+
+        <button
+          class="btn gray"
+          id="reloadButton"
+          onclick="loadStudents()"
+          disabled>
+          ↻ 重新整理
+        </button>
+
+      </div>
 
 
-      <button
-        class="btn gray"
-        id="reloadButton"
-        onclick="loadStudents()"
-        disabled
-      >
-        ↻ 重新整理
-      </button>
+      <div id="students">
 
-    </div>
+        <div class="message">
+          正在啟動 LINE 點名系統...
+        </div>
+
+      </div>
 
 
-    <div id="students">
+      <div
+        id="saveStatus"
+        class="save-status">
+      </div>
 
-      <div class="message">
-        正在啟動 LINE 點名系統...
+
+      <!-- 行政端入口 -->
+      <div class="admin-entry">
+
+        <button
+          class="btn purple"
+          onclick="openAdminLogin()">
+          🔐 進入行政端
+        </button>
+
       </div>
 
     </div>
 
+  </div>
 
-    <div
-      id="saveStatus"
-      class="save-status">
+
+  <!-- 行政登入頁 -->
+  <div
+    id="adminLoginPage"
+    style="display:none;">
+
+    <div class="card login-box">
+
+      <div class="login-icon">
+        🔐
+      </div>
+
+      <div class="login-title">
+        行政管理登入
+      </div>
+
+      <div class="login-text">
+        請輸入行政端密碼
+      </div>
+
+      <div class="password-box">
+
+        <input
+          type="password"
+          id="adminPassword"
+          placeholder="行政端密碼"
+          autocomplete="off"
+          onkeydown="adminPasswordKeydown(event)">
+
+      </div>
+
+      <button
+        class="btn purple"
+        id="adminLoginButton"
+        style="width:100%;"
+        onclick="adminLogin()">
+        登入行政端
+      </button>
+
+      <button
+        class="btn gray"
+        style="width:100%;margin-top:8px;"
+        onclick="backToAttendance()">
+        ← 返回點名
+      </button>
+
+      <div
+        id="loginError"
+        class="login-error">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- 行政端首頁 -->
+  <div
+    id="adminPage"
+    style="display:none;">
+
+    <div class="admin-header">
+
+      <div>
+
+        <div class="admin-title">
+          📊 行政管理
+        </div>
+
+        <div
+          class="date"
+          id="adminDate">
+        </div>
+
+      </div>
+
+      <button
+        class="btn gray"
+        onclick="logoutAdmin()">
+        ← 返回班級點名
+      </button>
+
+    </div>
+
+
+    <div id="adminContent">
+
+      <div class="card">
+
+        <div class="loading">
+          正在讀取全校今日點名資料...
+        </div>
+
+      </div>
+
     </div>
 
   </div>
@@ -318,7 +736,7 @@ textarea{
 <script>
 
 /* ==================================================
-   基本設定
+   設定
 ================================================== */
 
 const CONFIG = {
@@ -346,6 +764,7 @@ let currentClass = '';
 
 let studentData = [];
 
+let adminPassword = '';
 
 
 /* ==================================================
@@ -363,7 +782,6 @@ document.getElementById('today').textContent =
   );
 
 
-
 /* ==================================================
    系統啟動
 ================================================== */
@@ -371,22 +789,13 @@ document.getElementById('today').textContent =
 async function startApp(){
 
   const status =
-    document.getElementById(
-      'liffStatus'
-    );
+    document.getElementById('liffStatus');
 
 
   try{
 
-    /*
-     * ★ 最重要的地方
-     *
-     * 必須先完成 LIFF 初始化。
-     * LIFF 有可能在這個過程進行 redirect。
-     */
-
     await liff.init({
-      liffId: CONFIG.LIFF_ID
+      liffId:CONFIG.LIFF_ID
     });
 
 
@@ -396,19 +805,9 @@ async function startApp(){
         : '瀏覽器模式';
 
 
-    /*
-     * LIFF 初始化完成後，
-     * 才開始判斷班級。
-     */
-
     currentClass =
       getClassFromURL();
 
-
-    /*
-     * 找不到一般 ?class 時，
-     * 再嘗試從 liff.state 取得。
-     */
 
     if(!currentClass){
 
@@ -421,7 +820,6 @@ async function startApp(){
     if(!currentClass){
 
       showNoClass();
-
       return;
 
     }
@@ -435,7 +833,6 @@ async function startApp(){
 
 
     enableButtons();
-
 
     await loadStudents();
 
@@ -452,12 +849,6 @@ async function startApp(){
       'LINE 初始化失敗';
 
 
-    /*
-     * 即使 LIFF 初始化失敗，
-     * 若網址本身已有 class，
-     * 仍嘗試讓網頁正常工作。
-     */
-
     currentClass =
       getClassFromURL();
 
@@ -470,9 +861,7 @@ async function startApp(){
         currentClass +
         '｜今日點名';
 
-
       enableButtons();
-
 
       await loadStudents();
 
@@ -510,9 +899,8 @@ async function startApp(){
 }
 
 
-
 /* ==================================================
-   從目前網址取得 class
+   讀取 class
 ================================================== */
 
 function getClassFromURL(){
@@ -532,34 +920,26 @@ function getClassFromURL(){
 
 
     if(
-      CLASSES.includes(
-        className
-      )
+      CLASSES.includes(className)
     ){
 
       return className;
 
     }
 
-
   }catch(error){
 
-    console.error(
-      '讀取網址參數失敗',
-      error
-    );
+    console.error(error);
 
   }
-
 
   return '';
 
 }
 
 
-
 /* ==================================================
-   從 liff.state 取得 class
+   從 liff.state 讀取 class
 ================================================== */
 
 function getClassFromLiffState(){
@@ -573,9 +953,7 @@ function getClassFromLiffState(){
 
 
     const state =
-      params.get(
-        'liff.state'
-      );
+      params.get('liff.state');
 
 
     if(!state){
@@ -585,39 +963,22 @@ function getClassFromLiffState(){
     }
 
 
-    /*
-     * liff.state 可能長得像：
-     *
-     * /?class=一甲
-     *
-     * 或
-     *
-     * ?class=一甲
-     */
-
-    let decodedState =
-      state;
+    let decodedState = state;
 
 
     try{
 
       decodedState =
-        decodeURIComponent(
-          state
-        );
+        decodeURIComponent(state);
 
-    }catch(e){
-      // 已經解碼就直接使用
-    }
+    }catch(e){}
 
 
     const questionIndex =
       decodedState.indexOf('?');
 
 
-    if(
-      questionIndex === -1
-    ){
+    if(questionIndex === -1){
 
       return '';
 
@@ -638,36 +999,27 @@ function getClassFromLiffState(){
 
     const className =
       String(
-        stateParams.get('class')
-        || ''
+        stateParams.get('class') || ''
       ).trim();
 
 
     if(
-      CLASSES.includes(
-        className
-      )
+      CLASSES.includes(className)
     ){
 
       return className;
 
     }
 
-
   }catch(error){
 
-    console.error(
-      '讀取 liff.state 失敗：',
-      error
-    );
+    console.error(error);
 
   }
-
 
   return '';
 
 }
-
 
 
 /* ==================================================
@@ -692,8 +1044,7 @@ function showNoClass(){
 
       <br><br>
 
-      請從 LINE 官方帳號的
-      「一甲～六甲」按鈕進入。
+      請從 LINE 官方帳號的一甲～六甲按鈕進入。
 
     </div>
 
@@ -702,9 +1053,8 @@ function showNoClass(){
 }
 
 
-
 /* ==================================================
-   開啟按鈕
+   按鈕
 ================================================== */
 
 function enableButtons(){
@@ -713,11 +1063,9 @@ function enableButtons(){
     'checkAllButton'
   ).disabled = false;
 
-
   document.getElementById(
     'saveButton'
   ).disabled = false;
-
 
   document.getElementById(
     'reloadButton'
@@ -726,30 +1074,22 @@ function enableButtons(){
 }
 
 
-
 /* ==================================================
    JSONP API
 ================================================== */
 
-function api(
-  action,
-  params = {}
-){
+function api(action,params={}){
 
   return new Promise(
     (resolve,reject)=>{
 
 
       const callbackName =
-
         'attendanceCallback_' +
-
         Date.now() +
-
         '_' +
-
         Math.floor(
-          Math.random() * 100000
+          Math.random()*100000
         );
 
 
@@ -768,55 +1108,43 @@ function api(
         action
       );
 
-
       query.set(
         'callback',
         callbackName
       );
 
 
-      Object
-        .keys(params)
-        .forEach(
-          key => {
+      Object.keys(params).forEach(
+        key=>{
 
-            if(
-              params[key] !== undefined &&
-              params[key] !== null
-            ){
+          if(
+            params[key] !== undefined &&
+            params[key] !== null
+          ){
 
-              query.set(
-                key,
-                String(
-                  params[key]
-                )
-              );
-
-            }
+            query.set(
+              key,
+              String(params[key])
+            );
 
           }
-        );
+
+        }
+      );
 
 
-      let finished =
-        false;
+      let finished=false;
 
 
       const timer =
         setTimeout(
           ()=>{
 
-            if(finished){
-              return;
-            }
+            if(finished)return;
 
-
-            finished =
-              true;
-
+            finished=true;
 
             cleanup();
-
 
             reject(
               new Error(
@@ -829,25 +1157,17 @@ function api(
         );
 
 
-
       function cleanup(){
 
-        clearTimeout(
-          timer
-        );
+        clearTimeout(timer);
 
+        if(script.parentNode){
 
-        if(
-          script.parentNode
-        ){
-
-          script.parentNode
-            .removeChild(
-              script
-            );
+          script.parentNode.removeChild(
+            script
+          );
 
         }
-
 
         try{
 
@@ -855,31 +1175,18 @@ function api(
             callbackName
           ];
 
-        }catch(e){
-
-          window[
-            callbackName
-          ] = undefined;
-
-        }
+        }catch(e){}
 
       }
-
 
 
       window[
         callbackName
       ] = function(data){
 
+        if(finished)return;
 
-        if(finished){
-          return;
-        }
-
-
-        finished =
-          true;
-
+        finished=true;
 
         cleanup();
 
@@ -901,29 +1208,19 @@ function api(
         }
 
 
-        resolve(
-          data
-        );
+        resolve(data);
 
       };
-
 
 
       script.onerror =
         function(){
 
+          if(finished)return;
 
-          if(finished){
-            return;
-          }
-
-
-          finished =
-            true;
-
+          finished=true;
 
           cleanup();
-
 
           reject(
             new Error(
@@ -934,27 +1231,20 @@ function api(
         };
 
 
-
       script.src =
-
         CONFIG.API_URL +
-
         '?' +
-
         query.toString();
 
 
-
-      document.body
-        .appendChild(
-          script
-        );
+      document.body.appendChild(
+        script
+      );
 
     }
   );
 
 }
-
 
 
 /* ==================================================
@@ -966,7 +1256,6 @@ async function loadStudents(){
   if(!currentClass){
 
     showNoClass();
-
     return;
 
   }
@@ -997,8 +1286,7 @@ async function loadStudents(){
       await api(
         'getStudents',
         {
-          className:
-            currentClass
+          className:currentClass
         }
       );
 
@@ -1007,11 +1295,6 @@ async function loadStudents(){
 
 
   }catch(error){
-
-    console.error(
-      error
-    );
-
 
     box.innerHTML = `
 
@@ -1025,11 +1308,6 @@ async function loadStudents(){
           error.message
         )}
 
-        <br><br>
-
-        請確認 Apps Script
-        Web App 已正常部署。
-
       </div>
 
     `;
@@ -1037,7 +1315,6 @@ async function loadStudents(){
   }
 
 }
-
 
 
 /* ==================================================
@@ -1053,9 +1330,7 @@ function renderStudents(){
 
 
   if(
-    !Array.isArray(
-      studentData
-    ) ||
+    !Array.isArray(studentData) ||
     studentData.length === 0
   ){
 
@@ -1063,10 +1338,7 @@ function renderStudents(){
 
       <div class="message">
 
-        ${escapeHTML(
-          currentClass
-        )}
-
+        ${escapeHTML(currentClass)}
         目前沒有學生資料。
 
       </div>
@@ -1078,8 +1350,7 @@ function renderStudents(){
   }
 
 
-  box.innerHTML =
-    '';
+  box.innerHTML='';
 
 
   studentData.forEach(
@@ -1092,66 +1363,43 @@ function renderStudents(){
         );
 
 
-      div.className =
-        'student';
+      div.className='student';
 
 
       div.innerHTML = `
 
         <div class="student-row">
 
-
           <div class="number">
-
-            ${escapeHTML(
-              student.number
-            )}
-
+            ${escapeHTML(student.number)}
           </div>
-
 
           <div class="name">
-
-            ${escapeHTML(
-              student.name
-            )}
-
+            ${escapeHTML(student.name)}
           </div>
-
 
           <div
             class="status"
-            id="status-${index}"
-          >
-
+            id="status-${index}">
             出席
-
           </div>
-
 
           <button
             class="btn gray"
-            onclick="toggleDetails(${index})"
-          >
-
+            onclick="toggleDetails(${index})">
             假別／備註
-
           </button>
-
 
         </div>
 
 
         <div
           class="details"
-          id="details-${index}"
-        >
-
+          id="details-${index}">
 
           <select
             id="leave-${index}"
-            onchange="leaveChanged(${index})"
-          >
+            onchange="leaveChanged(${index})">
 
             <option value="">
               出席
@@ -1174,28 +1422,21 @@ function renderStudents(){
 
           <button
             class="btn gray"
-            onclick="setPresent(${index})"
-          >
-
+            onclick="setPresent(${index})">
             恢復出席
-
           </button>
 
 
           <textarea
             id="note-${index}"
-            placeholder="備註（可留白）"
-          ></textarea>
-
+            placeholder="備註（可留白）"></textarea>
 
         </div>
 
       `;
 
 
-      box.appendChild(
-        div
-      );
+      box.appendChild(div);
 
     }
   );
@@ -1203,9 +1444,8 @@ function renderStudents(){
 }
 
 
-
 /* ==================================================
-   展開假別
+   假別
 ================================================== */
 
 function toggleDetails(index){
@@ -1215,24 +1455,16 @@ function toggleDetails(index){
       'details-' + index
     );
 
-
   if(element){
 
-    element
-      .classList
-      .toggle(
-        'show'
-      );
+    element.classList.toggle(
+      'show'
+    );
 
   }
 
 }
 
-
-
-/* ==================================================
-   假別改變
-================================================== */
 
 function leaveChanged(index){
 
@@ -1250,28 +1482,19 @@ function leaveChanged(index){
 
   if(leave){
 
-    status.textContent =
-      '缺席';
+    status.textContent='缺席';
 
-
-    status.className =
+    status.className=
       'status absent';
 
   }else{
 
-    setPresent(
-      index
-    );
+    setPresent(index);
 
   }
 
 }
 
-
-
-/* ==================================================
-   恢復出席
-================================================== */
 
 function setPresent(index){
 
@@ -1280,11 +1503,9 @@ function setPresent(index){
       'leave-' + index
     );
 
-
   if(select){
 
-    select.value =
-      '';
+    select.value='';
 
   }
 
@@ -1294,43 +1515,30 @@ function setPresent(index){
       'status-' + index
     );
 
-
   if(status){
 
-    status.textContent =
-      '出席';
+    status.textContent='出席';
 
-
-    status.className =
-      'status';
+    status.className='status';
 
   }
 
 }
 
 
-
 /* ==================================================
-   一鍵全班簽到
+   全班簽到
 ================================================== */
 
 function checkAll(){
 
-  if(
-    !studentData.length
-  ){
-
-    return;
-
-  }
+  if(!studentData.length)return;
 
 
   studentData.forEach(
     (student,index)=>{
 
-      setPresent(
-        index
-      );
+      setPresent(index);
 
     }
   );
@@ -1339,15 +1547,13 @@ function checkAll(){
   document.getElementById(
     'saveStatus'
   ).textContent =
-
     '✓ 已將全班設定為出席，記得按「儲存今日出缺席」。';
 
 }
 
 
-
 /* ==================================================
-   儲存
+   儲存點名
 ================================================== */
 
 async function saveAttendance(){
@@ -1383,48 +1589,32 @@ async function saveAttendance(){
       (student,index)=>{
 
 
-        const leaveElement =
+        const leave =
           document.getElementById(
             'leave-' + index
-          );
-
-
-        const noteElement =
-          document.getElementById(
-            'note-' + index
-          );
-
-
-        const leave =
-          leaveElement
-            ? leaveElement.value
-            : '';
+          ).value;
 
 
         const note =
-          noteElement
-            ? noteElement.value.trim()
-            : '';
+          document.getElementById(
+            'note-' + index
+          ).value.trim();
 
 
-        return {
+        return{
 
-          number:
-            student.number,
+          number:student.number,
 
-          name:
-            student.name,
+          name:student.name,
 
           status:
             leave
               ? '缺席'
               : '出席',
 
-          leaveType:
-            leave,
+          leaveType:leave,
 
-          note:
-            note
+          note:note
 
         };
 
@@ -1432,15 +1622,13 @@ async function saveAttendance(){
     );
 
 
-  button.disabled =
-    true;
+  button.disabled=true;
 
-
-  button.textContent =
+  button.textContent=
     '儲存中...';
 
 
-  statusBox.textContent =
+  statusBox.textContent=
     '正在儲存點名資料...';
 
 
@@ -1450,21 +1638,14 @@ async function saveAttendance(){
       await api(
         'saveAttendance',
         {
-
-          className:
-            currentClass,
-
+          className:currentClass,
           records:
-            JSON.stringify(
-              records
-            )
-
+            JSON.stringify(records)
         }
       );
 
 
     statusBox.textContent =
-
       '✅ ' +
       result.className +
       ' 今日點名完成，共 ' +
@@ -1480,28 +1661,19 @@ async function saveAttendance(){
 
   }catch(error){
 
-    console.error(
-      error
-    );
-
-
-    statusBox.textContent =
+    statusBox.textContent=
       '❌ 儲存失敗';
-
 
     alert(
       '儲存失敗：' +
       error.message
     );
 
-
   }finally{
 
-    button.disabled =
-      false;
+    button.disabled=false;
 
-
-    button.textContent =
+    button.textContent=
       '💾 儲存今日出缺席';
 
   }
@@ -1509,9 +1681,727 @@ async function saveAttendance(){
 }
 
 
+/* ==================================================
+   開啟行政登入
+================================================== */
+
+function openAdminLogin(){
+
+  document.getElementById(
+    'attendancePage'
+  ).style.display='none';
+
+
+  document.getElementById(
+    'adminPage'
+  ).style.display='none';
+
+
+  document.getElementById(
+    'adminLoginPage'
+  ).style.display='block';
+
+
+  document.getElementById(
+    'adminPassword'
+  ).value='';
+
+
+  document.getElementById(
+    'loginError'
+  ).textContent='';
+
+
+  setTimeout(
+    ()=>{
+
+      document.getElementById(
+        'adminPassword'
+      ).focus();
+
+    },
+    100
+  );
+
+}
+
 
 /* ==================================================
-   HTML 安全處理
+   密碼 Enter
+================================================== */
+
+function adminPasswordKeydown(event){
+
+  if(event.key === 'Enter'){
+
+    adminLogin();
+
+  }
+
+}
+
+
+/* ==================================================
+   行政登入
+================================================== */
+
+async function adminLogin(){
+
+  const password =
+    document.getElementById(
+      'adminPassword'
+    ).value;
+
+
+  const errorBox =
+    document.getElementById(
+      'loginError'
+    );
+
+
+  const button =
+    document.getElementById(
+      'adminLoginButton'
+    );
+
+
+  if(!password){
+
+    errorBox.textContent =
+      '請輸入行政端密碼';
+
+    return;
+
+  }
+
+
+  errorBox.textContent='';
+
+  button.disabled=true;
+
+  button.textContent=
+    '驗證中...';
+
+
+  try{
+
+    const result =
+      await api(
+        'verifyAdmin',
+        {
+          password:password
+        }
+      );
+
+
+    if(!result.valid){
+
+      errorBox.textContent =
+        '❌ 密碼錯誤';
+
+      return;
+
+    }
+
+
+    adminPassword=password;
+
+
+    document.getElementById(
+      'adminLoginPage'
+    ).style.display='none';
+
+
+    document.getElementById(
+      'adminPage'
+    ).style.display='block';
+
+
+    await loadAdminData();
+
+
+  }catch(error){
+
+    errorBox.textContent =
+      '❌ 無法登入：' +
+      error.message;
+
+  }finally{
+
+    button.disabled=false;
+
+    button.textContent=
+      '登入行政端';
+
+  }
+
+}
+
+
+/* ==================================================
+   讀取行政資料
+================================================== */
+
+async function loadAdminData(){
+
+  const content =
+    document.getElementById(
+      'adminContent'
+    );
+
+
+  content.innerHTML = `
+
+    <div class="card">
+
+      <div class="loading">
+        正在讀取全校今日點名資料...
+      </div>
+
+    </div>
+
+  `;
+
+
+  try{
+
+    const data =
+      await api(
+        'getTodayAdminData',
+        {
+          password:adminPassword
+        }
+      );
+
+
+    renderAdmin(data);
+
+
+  }catch(error){
+
+    content.innerHTML = `
+
+      <div class="card">
+
+        <div class="error">
+
+          ❌ 無法讀取行政資料
+
+          <br><br>
+
+          ${escapeHTML(
+            error.message
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* ==================================================
+   顯示行政端
+================================================== */
+
+function renderAdmin(data){
+
+  document.getElementById(
+    'adminDate'
+  ).textContent =
+    '今日：' +
+    escapeHTML(data.date);
+
+
+  const classes =
+    Array.isArray(data.classes)
+      ? data.classes
+      : [];
+
+
+  const school =
+    data.school || {};
+
+
+  /* ===============================================
+     ① 六個班級點名狀況
+  =============================================== */
+
+  let classHTML='';
+
+
+  classes.forEach(
+    info=>{
+
+
+      const completed =
+        info.completed === true;
+
+
+      classHTML += `
+
+        <div class="
+          class-status-card
+          ${completed
+            ? 'completed'
+            : 'incomplete'}
+        ">
+
+          <div class="class-status-name">
+
+            ${escapeHTML(
+              info.className
+            )}
+
+          </div>
+
+
+          <div class="
+            class-status-label
+            ${completed
+              ? 'completed-text'
+              : 'incomplete-text'}
+          ">
+
+            ${
+              completed
+                ? '✅ 已完成點名'
+                : '⚠️ 尚未完成'
+            }
+
+          </div>
+
+
+          <div class="class-numbers">
+
+            全班：
+            ${Number(info.total || 0)}
+            人
+
+            <br>
+
+            已點：
+            ${Number(info.recorded || 0)}
+            人
+
+            <br>
+
+            出席：
+            ${Number(info.present || 0)}
+            人
+
+            <br>
+
+            請假：
+            ${Number(info.absent || 0)}
+            人
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  /* ===============================================
+     ② 全校請假名單
+  =============================================== */
+
+  let absentees=[];
+
+
+  classes.forEach(
+    info=>{
+
+      const list =
+        Array.isArray(info.absentees)
+          ? info.absentees
+          : [];
+
+
+      list.forEach(
+        student=>{
+
+          absentees.push({
+
+            className:
+              info.className,
+
+            number:
+              student.number,
+
+            name:
+              student.name,
+
+            leaveType:
+              student.leaveType,
+
+            note:
+              student.note
+
+          });
+
+        }
+      );
+
+    }
+  );
+
+
+  let absenceHTML='';
+
+
+  if(absentees.length === 0){
+
+    absenceHTML = `
+
+      <div class="no-absence">
+
+        🎉 今天目前沒有請假學生
+
+      </div>
+
+    `;
+
+  }else{
+
+
+    absentees.forEach(
+      student=>{
+
+
+        const leaveClass =
+          getLeaveClass(
+            student.leaveType
+          );
+
+
+        absenceHTML += `
+
+          <div class="absence-item">
+
+
+            <div class="absence-class">
+
+              ${escapeHTML(
+                student.className
+              )}
+
+            </div>
+
+
+            <div class="absence-seat">
+
+              ${escapeHTML(
+                student.number
+              )}號
+
+            </div>
+
+
+            <div class="absence-name">
+
+              ${escapeHTML(
+                student.name
+              )}
+
+            </div>
+
+
+            <div>
+
+              <span class="
+                leave-badge
+                ${leaveClass}
+              ">
+
+                ${escapeHTML(
+                  student.leaveType ||
+                  '請假'
+                )}
+
+              </span>
+
+            </div>
+
+
+            <div class="absence-note">
+
+              ${
+                student.note
+                  ? '備註：' +
+                    escapeHTML(
+                      student.note
+                    )
+                  : '備註：—'
+              }
+
+            </div>
+
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
+
+
+  /* ===============================================
+     完整行政畫面
+  =============================================== */
+
+  document.getElementById(
+    'adminContent'
+  ).innerHTML = `
+
+
+    <!-- 第一區：六班狀況 -->
+
+    <div class="card">
+
+      <div class="section-title">
+
+        🏫 今日各班點名狀況
+
+      </div>
+
+      <div class="section-subtitle">
+
+        可以直接確認六個班級是否完成今日點名
+
+      </div>
+
+
+      <div class="class-grid">
+
+        ${classHTML}
+
+      </div>
+
+    </div>
+
+
+    <!-- 第二區：全校統計 -->
+
+    <div class="card">
+
+      <div class="section-title">
+
+        📊 今日全校統計
+
+      </div>
+
+
+      <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+          <div class="stat-number">
+
+            ${Number(
+              school.completedClasses || 0
+            )}
+            /
+            ${Number(
+              school.totalClasses || 6
+            )}
+
+          </div>
+
+          <div class="stat-label">
+            已完成班級
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-number">
+
+            ${Number(
+              school.total || 0
+            )}
+
+          </div>
+
+          <div class="stat-label">
+            全校學生
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-number">
+
+            ${Number(
+              school.present || 0
+            )}
+
+          </div>
+
+          <div class="stat-label">
+            今日出席
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-number">
+
+            ${Number(
+              school.absent || 0
+            )}
+
+          </div>
+
+          <div class="stat-label">
+            今日請假
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- 第三區：全校請假名單 -->
+
+    <div class="card">
+
+      <div class="section-title">
+
+        📋 今日請假名單
+        （${absentees.length} 人）
+
+      </div>
+
+      <div class="section-subtitle">
+
+        六個班級的請假學生統一顯示在這裡
+
+      </div>
+
+
+      <div class="absence-list">
+
+        ${absenceHTML}
+
+      </div>
+
+    </div>
+
+
+    <div style="
+      text-align:center;
+      margin-bottom:25px;
+    ">
+
+      <button
+        class="btn blue"
+        onclick="loadAdminData()">
+
+        ↻ 更新今日資料
+
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ==================================================
+   假別顏色
+================================================== */
+
+function getLeaveClass(type){
+
+  if(type === '病假'){
+
+    return 'leave-sick';
+
+  }
+
+  if(type === '事假'){
+
+    return 'leave-personal';
+
+  }
+
+  if(type === '喪假'){
+
+    return 'leave-bereavement';
+
+  }
+
+  return 'leave-other';
+
+}
+
+
+/* ==================================================
+   返回點名
+================================================== */
+
+function backToAttendance(){
+
+  document.getElementById(
+    'adminLoginPage'
+  ).style.display='none';
+
+
+  document.getElementById(
+    'adminPage'
+  ).style.display='none';
+
+
+  document.getElementById(
+    'attendancePage'
+  ).style.display='block';
+
+}
+
+
+/* ==================================================
+   登出行政端
+================================================== */
+
+function logoutAdmin(){
+
+  adminPassword='';
+
+
+  document.getElementById(
+    'adminPassword'
+  ).value='';
+
+
+  backToAttendance();
+
+}
+
+
+/* ==================================================
+   HTML 安全
 ================================================== */
 
 function escapeHTML(value){
@@ -1520,7 +2410,7 @@ function escapeHTML(value){
     value ?? ''
   ).replace(
     /[&<>"']/g,
-    char => ({
+    char=>({
 
       '&':'&amp;',
       '<':'&lt;',
@@ -1534,9 +2424,8 @@ function escapeHTML(value){
 }
 
 
-
 /* ==================================================
-   ★ 最後才啟動系統
+   啟動
 ================================================== */
 
 startApp();
