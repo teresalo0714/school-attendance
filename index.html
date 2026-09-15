@@ -9,7 +9,11 @@
 
 <title>校園出缺席管理系統</title>
 
+<!-- LINE LIFF SDK -->
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -21,7 +25,9 @@ body{
   color:#243447;
 }
 
-button,select,textarea{
+button,
+select,
+textarea{
   font:inherit;
 }
 
@@ -78,6 +84,11 @@ button,select,textarea{
   cursor:pointer;
 }
 
+.btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
 .green{
   background:#16a34a;
   color:white;
@@ -125,6 +136,7 @@ button,select,textarea{
   border-radius:9px;
   background:#e8f5e9;
   color:#198754;
+  white-space:nowrap;
 }
 
 .status.absent{
@@ -144,7 +156,8 @@ button,select,textarea{
   display:grid;
 }
 
-select,textarea{
+select,
+textarea{
   width:100%;
   border:1px solid #d8e0ea;
   border-radius:10px;
@@ -162,6 +175,7 @@ textarea{
   text-align:center;
   padding:25px 10px;
   color:#718096;
+  line-height:1.7;
 }
 
 .error{
@@ -169,7 +183,7 @@ textarea{
   color:#c0392b;
   padding:15px;
   border-radius:12px;
-  line-height:1.7;
+  line-height:1.8;
 }
 
 .save-status{
@@ -177,6 +191,13 @@ textarea{
   text-align:center;
   font-size:14px;
   color:#718096;
+  line-height:1.6;
+}
+
+.liff-status{
+  font-size:12px;
+  color:#94a3b8;
+  margin-top:5px;
 }
 
 @media(max-width:600px){
@@ -208,7 +229,9 @@ textarea{
   .toolbar .btn{
     flex:1;
   }
+
 }
+
 </style>
 </head>
 
@@ -225,31 +248,48 @@ textarea{
 
     <div class="date" id="today"></div>
 
+    <div class="liff-status" id="liffStatus">
+      正在連接 LINE...
+    </div>
+
   </div>
 
 
   <div class="card">
 
     <div class="class-title" id="classTitle">
-      載入中...
+      正在讀取班級...
     </div>
 
 
     <div class="toolbar">
 
-      <button class="btn green"
-              onclick="checkAll()">
+      <button
+        class="btn green"
+        id="checkAllButton"
+        onclick="checkAll()"
+        disabled
+      >
         ✓ 一鍵全班簽到
       </button>
 
-      <button class="btn blue"
-              id="saveButton"
-              onclick="saveAttendance()">
+
+      <button
+        class="btn blue"
+        id="saveButton"
+        onclick="saveAttendance()"
+        disabled
+      >
         💾 儲存今日出缺席
       </button>
 
-      <button class="btn gray"
-              onclick="loadStudents()">
+
+      <button
+        class="btn gray"
+        id="reloadButton"
+        onclick="loadStudents()"
+        disabled
+      >
         ↻ 重新整理
       </button>
 
@@ -257,14 +297,17 @@ textarea{
 
 
     <div id="students">
+
       <div class="message">
-        正在讀取學生名單...
+        正在啟動 LINE 點名系統...
       </div>
+
     </div>
 
 
-    <div id="saveStatus"
-         class="save-status">
+    <div
+      id="saveStatus"
+      class="save-status">
     </div>
 
   </div>
@@ -274,12 +317,19 @@ textarea{
 
 <script>
 
-/* ==========================================
-   Apps Script API
-========================================== */
+/* ==================================================
+   基本設定
+================================================== */
 
-const API_URL =
-'https://script.google.com/macros/s/AKfycbyn4EvzGapAd2XyPIVhVgi8q4E-y38qlb0YrkcyALWbVanOgHKTW_h70Ws9DG7BIbQ/exec';
+const CONFIG = {
+
+  LIFF_ID:
+    '2011500404-mIhsA2fA',
+
+  API_URL:
+    'https://script.google.com/macros/s/AKfycbyn4EvzGapAd2XyPIVhVgi8q4E-y38qlb0YrkcyALWbVanOgHKTW_h70Ws9DG7BIbQ/exec'
+
+};
 
 
 const CLASSES = [
@@ -297,9 +347,10 @@ let currentClass = '';
 let studentData = [];
 
 
-/* ==========================================
+
+/* ==================================================
    日期
-========================================== */
+================================================== */
 
 document.getElementById('today').textContent =
   new Date().toLocaleDateString(
@@ -312,49 +363,128 @@ document.getElementById('today').textContent =
   );
 
 
-/* ==========================================
-   取得網址裡面的班級
-========================================== */
 
-function getClassFromURL(){
+/* ==================================================
+   系統啟動
+================================================== */
 
-  const params =
-    new URLSearchParams(
-      window.location.search
+async function startApp(){
+
+  const status =
+    document.getElementById(
+      'liffStatus'
     );
 
-  let className =
-    params.get('class') || '';
 
-  className =
-    className.trim();
+  try{
 
-  if(
-    CLASSES.includes(className)
-  ){
-    return className;
-  }
+    /*
+     * ★ 最重要的地方
+     *
+     * 必須先完成 LIFF 初始化。
+     * LIFF 有可能在這個過程進行 redirect。
+     */
 
-  return '';
-}
-
-
-/* ==========================================
-   初始化
-========================================== */
-
-function init(){
-
-  currentClass =
-    getClassFromURL();
+    await liff.init({
+      liffId: CONFIG.LIFF_ID
+    });
 
 
-  if(!currentClass){
+    status.textContent =
+      liff.isInClient()
+        ? 'LINE 內開啟'
+        : '瀏覽器模式';
+
+
+    /*
+     * LIFF 初始化完成後，
+     * 才開始判斷班級。
+     */
+
+    currentClass =
+      getClassFromURL();
+
+
+    /*
+     * 找不到一般 ?class 時，
+     * 再嘗試從 liff.state 取得。
+     */
+
+    if(!currentClass){
+
+      currentClass =
+        getClassFromLiffState();
+
+    }
+
+
+    if(!currentClass){
+
+      showNoClass();
+
+      return;
+
+    }
+
 
     document.getElementById(
       'classTitle'
     ).textContent =
-      '找不到班級';
+      currentClass +
+      '｜今日點名';
+
+
+    enableButtons();
+
+
+    await loadStudents();
+
+
+  }catch(error){
+
+    console.error(
+      'LIFF 初始化錯誤：',
+      error
+    );
+
+
+    status.textContent =
+      'LINE 初始化失敗';
+
+
+    /*
+     * 即使 LIFF 初始化失敗，
+     * 若網址本身已有 class，
+     * 仍嘗試讓網頁正常工作。
+     */
+
+    currentClass =
+      getClassFromURL();
+
+
+    if(currentClass){
+
+      document.getElementById(
+        'classTitle'
+      ).textContent =
+        currentClass +
+        '｜今日點名';
+
+
+      enableButtons();
+
+
+      await loadStudents();
+
+      return;
+
+    }
+
+
+    document.getElementById(
+      'classTitle'
+    ).textContent =
+      '無法啟動系統';
 
 
     document.getElementById(
@@ -363,49 +493,263 @@ function init(){
 
       <div class="error">
 
-        ⚠️ 這個網址沒有指定班級。
+        ❌ LINE LIFF 初始化失敗。
 
         <br><br>
 
-        請從 LINE 官方帳號的
-        「一甲～六甲」按鈕進入。
+        ${escapeHTML(
+          error.message || error
+        )}
 
       </div>
 
     `;
 
-    return;
   }
 
+}
+
+
+
+/* ==================================================
+   從目前網址取得 class
+================================================== */
+
+function getClassFromURL(){
+
+  try{
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const className =
+      String(
+        params.get('class') || ''
+      ).trim();
+
+
+    if(
+      CLASSES.includes(
+        className
+      )
+    ){
+
+      return className;
+
+    }
+
+
+  }catch(error){
+
+    console.error(
+      '讀取網址參數失敗',
+      error
+    );
+
+  }
+
+
+  return '';
+
+}
+
+
+
+/* ==================================================
+   從 liff.state 取得 class
+================================================== */
+
+function getClassFromLiffState(){
+
+  try{
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const state =
+      params.get(
+        'liff.state'
+      );
+
+
+    if(!state){
+
+      return '';
+
+    }
+
+
+    /*
+     * liff.state 可能長得像：
+     *
+     * /?class=一甲
+     *
+     * 或
+     *
+     * ?class=一甲
+     */
+
+    let decodedState =
+      state;
+
+
+    try{
+
+      decodedState =
+        decodeURIComponent(
+          state
+        );
+
+    }catch(e){
+      // 已經解碼就直接使用
+    }
+
+
+    const questionIndex =
+      decodedState.indexOf('?');
+
+
+    if(
+      questionIndex === -1
+    ){
+
+      return '';
+
+    }
+
+
+    const queryString =
+      decodedState.substring(
+        questionIndex + 1
+      );
+
+
+    const stateParams =
+      new URLSearchParams(
+        queryString
+      );
+
+
+    const className =
+      String(
+        stateParams.get('class')
+        || ''
+      ).trim();
+
+
+    if(
+      CLASSES.includes(
+        className
+      )
+    ){
+
+      return className;
+
+    }
+
+
+  }catch(error){
+
+    console.error(
+      '讀取 liff.state 失敗：',
+      error
+    );
+
+  }
+
+
+  return '';
+
+}
+
+
+
+/* ==================================================
+   找不到班級
+================================================== */
+
+function showNoClass(){
 
   document.getElementById(
     'classTitle'
   ).textContent =
-    currentClass + '｜今日點名';
+    '找不到班級';
 
 
-  loadStudents();
+  document.getElementById(
+    'students'
+  ).innerHTML = `
+
+    <div class="error">
+
+      ⚠️ 這個 LINE 連結沒有帶入班級資料。
+
+      <br><br>
+
+      請從 LINE 官方帳號的
+      「一甲～六甲」按鈕進入。
+
+    </div>
+
+  `;
+
 }
 
 
-init();
+
+/* ==================================================
+   開啟按鈕
+================================================== */
+
+function enableButtons(){
+
+  document.getElementById(
+    'checkAllButton'
+  ).disabled = false;
 
 
-/* ==========================================
+  document.getElementById(
+    'saveButton'
+  ).disabled = false;
+
+
+  document.getElementById(
+    'reloadButton'
+  ).disabled = false;
+
+}
+
+
+
+/* ==================================================
    JSONP API
-========================================== */
+================================================== */
 
-function api(action,params={}){
+function api(
+  action,
+  params = {}
+){
 
   return new Promise(
     (resolve,reject)=>{
 
+
       const callbackName =
-        'callback_' +
+
+        'attendanceCallback_' +
+
         Date.now() +
+
         '_' +
+
         Math.floor(
-          Math.random()*100000
+          Math.random() * 100000
         );
 
 
@@ -431,96 +775,31 @@ function api(action,params={}){
       );
 
 
-      Object.keys(params)
-        .forEach(key=>{
+      Object
+        .keys(params)
+        .forEach(
+          key => {
 
-          if(
-            params[key] !== undefined &&
-            params[key] !== null
-          ){
+            if(
+              params[key] !== undefined &&
+              params[key] !== null
+            ){
 
-            query.set(
-              key,
-              String(params[key])
-            );
+              query.set(
+                key,
+                String(
+                  params[key]
+                )
+              );
+
+            }
 
           }
-
-        });
-
-
-      let finished = false;
+        );
 
 
-      function cleanup(){
-
-        if(finished){
-          return;
-        }
-
-        finished = true;
-
-        clearTimeout(timer);
-
-        if(script.parentNode){
-          script.parentNode.removeChild(
-            script
-          );
-        }
-
-        try{
-          delete window[callbackName];
-        }catch(e){
-          window[callbackName] = undefined;
-        }
-      }
-
-
-      window[callbackName] =
-        function(data){
-
-          if(finished){
-            return;
-          }
-
-          cleanup();
-
-
-          if(
-            data &&
-            data.ok === false
-          ){
-
-            reject(
-              new Error(
-                data.error ||
-                'API 發生錯誤'
-              )
-            );
-
-            return;
-          }
-
-
-          resolve(data);
-        };
-
-
-      script.onerror =
-        function(){
-
-          if(finished){
-            return;
-          }
-
-          cleanup();
-
-          reject(
-            new Error(
-              '無法連線 Apps Script'
-            )
-          );
-        };
+      let finished =
+        false;
 
 
       const timer =
@@ -531,11 +810,17 @@ function api(action,params={}){
               return;
             }
 
+
+            finished =
+              true;
+
+
             cleanup();
+
 
             reject(
               new Error(
-                '連線逾時'
+                'Apps Script 連線逾時'
               )
             );
 
@@ -544,29 +829,146 @@ function api(action,params={}){
         );
 
 
+
+      function cleanup(){
+
+        clearTimeout(
+          timer
+        );
+
+
+        if(
+          script.parentNode
+        ){
+
+          script.parentNode
+            .removeChild(
+              script
+            );
+
+        }
+
+
+        try{
+
+          delete window[
+            callbackName
+          ];
+
+        }catch(e){
+
+          window[
+            callbackName
+          ] = undefined;
+
+        }
+
+      }
+
+
+
+      window[
+        callbackName
+      ] = function(data){
+
+
+        if(finished){
+          return;
+        }
+
+
+        finished =
+          true;
+
+
+        cleanup();
+
+
+        if(
+          data &&
+          data.ok === false
+        ){
+
+          reject(
+            new Error(
+              data.error ||
+              'API 發生錯誤'
+            )
+          );
+
+          return;
+
+        }
+
+
+        resolve(
+          data
+        );
+
+      };
+
+
+
+      script.onerror =
+        function(){
+
+
+          if(finished){
+            return;
+          }
+
+
+          finished =
+            true;
+
+
+          cleanup();
+
+
+          reject(
+            new Error(
+              '無法連線到 Apps Script'
+            )
+          );
+
+        };
+
+
+
       script.src =
-        API_URL +
+
+        CONFIG.API_URL +
+
         '?' +
+
         query.toString();
 
 
-      document.body.appendChild(
-        script
-      );
+
+      document.body
+        .appendChild(
+          script
+        );
 
     }
   );
+
 }
 
 
-/* ==========================================
-   取得學生名單
-========================================== */
+
+/* ==================================================
+   讀取學生
+================================================== */
 
 async function loadStudents(){
 
   if(!currentClass){
+
+    showNoClass();
+
     return;
+
   }
 
 
@@ -577,10 +979,15 @@ async function loadStudents(){
 
 
   box.innerHTML = `
+
     <div class="message">
-      正在讀取 ${escapeHTML(currentClass)}
+
+      正在讀取
+      ${escapeHTML(currentClass)}
       學生名單...
+
     </div>
+
   `;
 
 
@@ -601,6 +1008,11 @@ async function loadStudents(){
 
   }catch(error){
 
+    console.error(
+      error
+    );
+
+
     box.innerHTML = `
 
       <div class="error">
@@ -613,6 +1025,11 @@ async function loadStudents(){
           error.message
         )}
 
+        <br><br>
+
+        請確認 Apps Script
+        Web App 已正常部署。
+
       </div>
 
     `;
@@ -622,9 +1039,10 @@ async function loadStudents(){
 }
 
 
-/* ==========================================
+
+/* ==================================================
    顯示學生
-========================================== */
+================================================== */
 
 function renderStudents(){
 
@@ -635,28 +1053,38 @@ function renderStudents(){
 
 
   if(
-    !Array.isArray(studentData) ||
+    !Array.isArray(
+      studentData
+    ) ||
     studentData.length === 0
   ){
 
     box.innerHTML = `
 
       <div class="message">
-        ${escapeHTML(currentClass)}
+
+        ${escapeHTML(
+          currentClass
+        )}
+
         目前沒有學生資料。
+
       </div>
 
     `;
 
     return;
+
   }
 
 
-  box.innerHTML = '';
+  box.innerHTML =
+    '';
 
 
   studentData.forEach(
     (student,index)=>{
+
 
       const div =
         document.createElement(
@@ -672,13 +1100,22 @@ function renderStudents(){
 
         <div class="student-row">
 
+
           <div class="number">
-            ${escapeHTML(student.number)}
+
+            ${escapeHTML(
+              student.number
+            )}
+
           </div>
 
 
           <div class="name">
-            ${escapeHTML(student.name)}
+
+            ${escapeHTML(
+              student.name
+            )}
+
           </div>
 
 
@@ -686,7 +1123,9 @@ function renderStudents(){
             class="status"
             id="status-${index}"
           >
+
             出席
+
           </div>
 
 
@@ -694,8 +1133,11 @@ function renderStudents(){
             class="btn gray"
             onclick="toggleDetails(${index})"
           >
+
             假別／備註
+
           </button>
+
 
         </div>
 
@@ -704,6 +1146,7 @@ function renderStudents(){
           class="details"
           id="details-${index}"
         >
+
 
           <select
             id="leave-${index}"
@@ -733,7 +1176,9 @@ function renderStudents(){
             class="btn gray"
             onclick="setPresent(${index})"
           >
+
             恢復出席
+
           </button>
 
 
@@ -741,6 +1186,7 @@ function renderStudents(){
             id="note-${index}"
             placeholder="備註（可留白）"
           ></textarea>
+
 
         </div>
 
@@ -757,24 +1203,36 @@ function renderStudents(){
 }
 
 
-/* ==========================================
+
+/* ==================================================
    展開假別
-========================================== */
+================================================== */
 
 function toggleDetails(index){
 
-  document
-    .getElementById(
+  const element =
+    document.getElementById(
       'details-' + index
-    )
-    .classList
-    .toggle('show');
+    );
+
+
+  if(element){
+
+    element
+      .classList
+      .toggle(
+        'show'
+      );
+
+  }
+
 }
 
 
-/* ==========================================
+
+/* ==================================================
    假別改變
-========================================== */
+================================================== */
 
 function leaveChanged(index){
 
@@ -795,25 +1253,40 @@ function leaveChanged(index){
     status.textContent =
       '缺席';
 
+
     status.className =
       'status absent';
 
   }else{
 
-    setPresent(index);
+    setPresent(
+      index
+    );
+
   }
+
 }
 
 
-/* ==========================================
+
+/* ==================================================
    恢復出席
-========================================== */
+================================================== */
 
 function setPresent(index){
 
-  document.getElementById(
-    'leave-' + index
-  ).value = '';
+  const select =
+    document.getElementById(
+      'leave-' + index
+    );
+
+
+  if(select){
+
+    select.value =
+      '';
+
+  }
 
 
   const status =
@@ -822,23 +1295,43 @@ function setPresent(index){
     );
 
 
-  status.textContent =
-    '出席';
+  if(status){
 
-  status.className =
-    'status';
+    status.textContent =
+      '出席';
+
+
+    status.className =
+      'status';
+
+  }
+
 }
 
 
-/* ==========================================
+
+/* ==================================================
    一鍵全班簽到
-========================================== */
+================================================== */
 
 function checkAll(){
 
+  if(
+    !studentData.length
+  ){
+
+    return;
+
+  }
+
+
   studentData.forEach(
     (student,index)=>{
-      setPresent(index);
+
+      setPresent(
+        index
+      );
+
     }
   );
 
@@ -846,25 +1339,30 @@ function checkAll(){
   document.getElementById(
     'saveStatus'
   ).textContent =
+
     '✓ 已將全班設定為出席，記得按「儲存今日出缺席」。';
+
 }
 
 
-/* ==========================================
-   儲存點名
-========================================== */
+
+/* ==================================================
+   儲存
+================================================== */
 
 async function saveAttendance(){
 
   if(
+    !currentClass ||
     !studentData.length
   ){
 
     alert(
-      '目前沒有學生資料。'
+      '目前沒有可以儲存的學生資料。'
     );
 
     return;
+
   }
 
 
@@ -884,16 +1382,29 @@ async function saveAttendance(){
     studentData.map(
       (student,index)=>{
 
-        const leave =
+
+        const leaveElement =
           document.getElementById(
             'leave-' + index
-          ).value;
+          );
+
+
+        const noteElement =
+          document.getElementById(
+            'note-' + index
+          );
+
+
+        const leave =
+          leaveElement
+            ? leaveElement.value
+            : '';
 
 
         const note =
-          document.getElementById(
-            'note-' + index
-          ).value.trim();
+          noteElement
+            ? noteElement.value.trim()
+            : '';
 
 
         return {
@@ -924,8 +1435,10 @@ async function saveAttendance(){
   button.disabled =
     true;
 
+
   button.textContent =
     '儲存中...';
+
 
   statusBox.textContent =
     '正在儲存點名資料...';
@@ -951,15 +1464,26 @@ async function saveAttendance(){
 
 
     statusBox.textContent =
-      `✅ ${result.className} 點名完成，共 ${result.count} 人。`;
+
+      '✅ ' +
+      result.className +
+      ' 今日點名完成，共 ' +
+      result.count +
+      ' 人。';
 
 
     alert(
-      `${result.className} 今日點名完成！`
+      result.className +
+      ' 今日點名完成！'
     );
 
 
   }catch(error){
+
+    console.error(
+      error
+    );
+
 
     statusBox.textContent =
       '❌ 儲存失敗';
@@ -970,10 +1494,12 @@ async function saveAttendance(){
       error.message
     );
 
+
   }finally{
 
     button.disabled =
       false;
+
 
     button.textContent =
       '💾 儲存今日出缺席';
@@ -983,9 +1509,10 @@ async function saveAttendance(){
 }
 
 
-/* ==========================================
-   防止 HTML 注入
-========================================== */
+
+/* ==================================================
+   HTML 安全處理
+================================================== */
 
 function escapeHTML(value){
 
@@ -994,14 +1521,25 @@ function escapeHTML(value){
   ).replace(
     /[&<>"']/g,
     char => ({
+
       '&':'&amp;',
       '<':'&lt;',
       '>':'&gt;',
       '"':'&quot;',
       "'":'&#39;'
+
     }[char])
   );
+
 }
+
+
+
+/* ==================================================
+   ★ 最後才啟動系統
+================================================== */
+
+startApp();
 
 </script>
 
